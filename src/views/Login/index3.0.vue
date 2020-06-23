@@ -12,16 +12,32 @@
         </li>
       </ul>
       <!--表单 -->
-      <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="login-form" size="medium">
+      <el-form
+        :model="ruleForm"
+        status-icon
+        :rules="rules"
+        ref="ruleForm"
+        class="login-form"
+        size="medium"
+      >
         <el-form-item prop="username" class="item-from">
-          <label for="email">邮箱</label>
-          <el-input id="email" type="text" v-model="ruleForm.username" autocomplete="off "></el-input>
+          <label>邮箱</label>
+          <el-input
+            type="text"
+            v-model="ruleForm.username"
+            autocomplete="off "
+          ></el-input>
         </el-form-item>
 
         <el-form-item prop="password">
-          <label for="possword">密码</label>
-          <el-input id="possword" type="text" v-model="ruleForm.password" autocomplete="off" maxlength="20" minlength="6">
-          </el-input>
+          <label>密码</label>
+          <el-input
+            type="text"
+            v-model="ruleForm.password"
+            autocomplete="off"
+            maxlength="20"
+            minlength="6"
+          ></el-input>
         </el-form-item>
 
         <el-form-item prop="passwords" v-if="model === 'reg'">
@@ -31,8 +47,8 @@
             v-model="ruleForm.passwords"
             autocomplete="off"
             maxlength="20"
-            minlength="6">
-          </el-input>
+            minlength="6"
+          ></el-input>
         </el-form-item>
 
         <el-form-item prop="code">
@@ -42,31 +58,31 @@
               <el-input v-model.number="ruleForm.code"></el-input>
             </el-col>
             <el-col :span="9">
-              <el-button type="success" class="block" @click="getCode">
-                  获取验证码
-              </el-button>
+              <el-button type="success" class="block" clearable
+                >获取验证码</el-button
+              >
             </el-col>
           </el-row>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="danger" @click="submitForm('ruleForm')" class="login-but block" :disabled="sta">
-              {{model === 'reg' ? "注册" : "登录"}}
-          </el-button>
+          <el-button
+            type="danger"
+            @click="submitForm('ruleForm')"
+            class="login-but block"
+            >提交</el-button
+          >
         </el-form-item>
       </el-form>
     </div>
   </div>
 </template>
 <script>
-import {getSms} from "@/api/login"
-import axios from "axios";
-import { loginApi } from "@/api/login";
 import { reactive, ref, isRef, toRefs, onMounted } from "@vue/composition-api";
 import { stripscript, valiDateEmal, valiDatePoss } from "@/utils/validate";
 export default {
   name: "login",
-  setup: function (props, context) {
+  setup(props, context) {
     //data数据 //reactive
     var validateCode = (rule, value, callback) => {
       let reg = /^[a-z0-9]{6}$/;
@@ -77,7 +93,6 @@ export default {
         if (reg.test(value)) {
           callback(new Error("验证码格式有误"));
         } else {
-          sta = ref(false)
           callback();
         }
       }, 1000);
@@ -113,12 +128,11 @@ export default {
       }
     };
     const menuTab = reactive([
-      {text: "登录", current: true, type: "login"},
-      {text: "注册", current: false, type: "reg"}
+      { text: "登录", current: true, type: "login" },
+      { text: "注册", current: false, type: "reg" }
     ]);
     //基本数据使用 ref
     const model = ref("login");
-    const sta = ref(true)
     const ruleForm = reactive({
       username: "",
       password: "",
@@ -126,10 +140,10 @@ export default {
       code: ""
     });
     const rules = reactive({
-      username: [{validator: validateUsername, trigger: "blur"}],
-      password: [{validator: validatePassword, trigger: "blur"}],
-      passwords: [{validator: validatePasswords, trigger: "blur"}],
-      code: [{validator: validateCode, trigger: "blur"}]
+      username: [{ validator: validateUsername, trigger: "blur" }],
+      password: [{ validator: validatePassword, trigger: "blur" }],
+      passwords: [{ validator: validatePasswords, trigger: "blur" }],
+      code: [{ validator: validateCode, trigger: "blur" }]
     });
     const toggleMneu = data => {
       menuTab.forEach(e => {
@@ -159,49 +173,16 @@ export default {
         });
       }
     };
-
-    /**
-     * 获取验证码
-     */
-    const getCode = () => {
-      if(ruleForm.username != '' && ruleForm.password != '') {
-        if(valiDateEmal(ruleForm.username)) {
-          //获取验证码
-          let data = {
-            username: ruleForm.username,
-            module: "login"
-          }
-          getSms(data).then(res => {
-            console.log(res)
-          }).catch(e => {
-            console.log(e)
-          })
-        } else {
-          context.root.$message.error('邮箱格式有误');
-        }
-      } else {
-        context.root.$message.error('邮箱或密码不能为空');
-      }
-      /*getSms({username: ruleForm.username}).then(res => {
-
-      }).catch(e => {
-        console.log(e)
-      })*/
-    }
     /**
      * 生命周期
      */
     //挂载后
-    onMounted(() => {
-
-    });
+    onMounted(() => {});
     return {
       menuTab,
       model,
-      sta,
       toggleMneu,
       submitForm,
-      getCode,
       onMounted,
       ruleForm,
       rules

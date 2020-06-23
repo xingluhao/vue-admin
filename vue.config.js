@@ -13,12 +13,12 @@ module.exports = {
     const svgRule = config.module.rule("svg");
     svgRule.uses.clear();
     svgRule
-        .use("svg-sprite-loader")
-        .loader("svg-sprite-loader")
-        .options({
-          symbolId: "icon-[name]",
-          include: ["./src/icons"]
-        });
+      .use("svg-sprite-loader")
+      .loader("svg-sprite-loader")
+      .options({
+        symbolId: "icon-[name]",
+        include: ["./src/icons"]
+      });
   },
   configureWebpack: config => {
     config.resolve = {
@@ -58,24 +58,34 @@ module.exports = {
   // webpack-dev-server 相关配置
   devServer: {
     open: false, // 编译完成是否打开网页
-    host: '0.0.0.0', // 指定使用地址，默认localhost,0.0.0.0代表可以被外界访问
+    host: "0.0.0.0", // 指定使用地址，默认localhost,0.0.0.0代表可以被外界访问
     port: 8080, // 访问端口
     https: false, // 编译失败时刷新页面
     hot: true, // 开启热加载
     hotOnly: false,
     // 跨域
     proxy: {
-      [process.env.VUE_APP_BASE_API]: {
-        //target: 'http://60.2.15.152:9113', //外网
-        target: 'http://10.99.202.160:8080', // 要访问的接口域名
-        changeOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据
-        //并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
-        pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: '', //这里理解成用''代替target里面的地址
-          // ['^${process.env.VUE_APP_BASE_API}']: '' //es6
+      '/devApi': {
+        target:'http://www.web-jshtml.cn/productapi', // 你请求的第三方接口
+        changeOrigin:true, // 在本地会创建一个虚拟服务端，然后发送请求的数据，并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+        pathRewrite:{  // 路径重写，
+          '^/devApi': ''  // 替换target中的请求地址，也就是说以后你在请求http://api.douban.com/v2/XXXXX这个地址的时候直接写成/api即可。
         }
       }
     },
+
+    // proxy: {
+    //   [process.env.VUE_APP_BASE_API]: {
+    //     //target: 'http://60.2.15.152:9113', //外网
+    //     target: "http://10.99.202.160:8080", // 要访问的接口域名
+    //     changeOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据
+    //     //并同时接收请求的数据，这样服务端和服务端进行数据的交互就不会有跨域问题
+    //     pathRewrite: {
+    //       ["^" + process.env.VUE_APP_BASE_API]: "" //这里理解成用''代替target里面的地址
+    //       // ['^${process.env.VUE_APP_BASE_API}']: '' //es6
+    //     }
+    //   }
+    // },
     overlay: {
       // 全屏模式下是否显示脚本错误
       warnings: true,
